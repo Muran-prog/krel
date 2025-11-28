@@ -1,0 +1,38 @@
+[build-system]
+requires      = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "krel"
+version = "0.1.2"
+description = "Secure streaming file encryption with O(1) memory usage"
+authors = [{ name = "Muran-prog", email = "krel.security@proton.me" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["encryption", "security", "streaming", "cryptography", "file"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+    "Topic :: System :: Filesystems",
+]
+
+[project.urls]
+Homepage      = "https://github.com/Muran-prog/krel"
+Repository    = "https://github.com/Muran-prog/krel"
+"Bug Tracker" = "https://github.com/Muran-prog/krel/issues"
+
+[tool.maturin]
+features      = ["pyo3/extension-module"]
+python-source = "python"
+module-name   = "krel._core"

@@ -1,0 +1,39 @@
+[package]
+name          = "krel"
+version       = "0.1.2"
+edition       = "2021"
+rust-version  = "1.70"
+authors       = ["Muran-prog <krel.security@proton.me>"]
+license       = "MIT"
+description   = "Secure streaming file encryption with O(1) memory usage"
+repository    = "https://github.com/Muran-prog/krel"
+homepage      = "https://github.com/Muran-prog/krel"
+documentation = "https://docs.rs/krel"
+readme        = "README.md"
+keywords      = ["encryption", "security", "streaming", "cryptography", "file"]
+categories    = ["cryptography", "filesystem"]
+
+[lib]
+name       = "krel"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3         = { version = "0.20", features = ["extension-module", "abi3-py38"] }
+pyo3-asyncio = { version = "0.20", features = ["tokio-runtime"] }
+tokio        = { version = "1", features = ["full", "rt-multi-thread"] }
+
+chacha20poly1305 = "0.10"
+blake3           = { version = "1.5", features = ["traits-preview"] }
+argon2           = "0.5"
+subtle           = "2.5"
+
+rand    = "0.8"
+zeroize = { version = "1.7", features = ["derive"] }
+
+thiserror = "1.0"
+
+[profile.release]
+opt-level     = 3
+lto           = true
+codegen-units = 1
+strip         = true

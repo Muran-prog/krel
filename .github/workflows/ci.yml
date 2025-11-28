@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+env:
+  CARGO_TERM_COLOR: always
+  PYTHONIOENCODING: utf-8
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Create and activate virtual environment
+        shell: bash
+        run: |
+          python -m venv .venv
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "$GITHUB_WORKSPACE/.venv/Scripts" >> $GITHUB_PATH
+          else
+            echo "$GITHUB_WORKSPACE/.venv/bin" >> $GITHUB_PATH
+          fi
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install maturin
+
+      - name: Run Rust tests
+        run: cargo test --verbose
+
+      - name: Build Python module
+        run: maturin develop --release
+
+      - name: Run Python examples
+        run: |
+          python examples/basic.py
+          python examples/rekey.py
+          python examples/error_handling.py
+          python examples/async_example.py
